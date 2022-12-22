@@ -50,6 +50,7 @@ That's about it. I'm figuring this out just like you, so if you have questions o
 
 ## Tips for migrating
 
+- Put your mastodon handle (@yourhandle@cryoem.social) in your twitter bio. Then it will be easier to find (and be found!) by other twitter migrants using tools like: [MOVETODON](https://www.movetodon.org/)
 - Follow people liberally and then unfollow if their content is not serving you.
 - You can personally block or mute accounts or servers. One thing I have enjoyed is muting accounts for a week, available in the dropdown upon muting, and giving them a second chance.
 - ***Cross post!***

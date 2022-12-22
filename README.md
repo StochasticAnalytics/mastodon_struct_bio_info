@@ -72,9 +72,11 @@ That's about it. I'm figuring this out just like you, so if you have questions o
         Split long toots on Twitter?
         Link toot with warning if there are sensitive images?
         Remove toot content warning?
-        Post tweets to Mastodon?
+
+    
+        [X] Post tweets to Mastodon?
         Toot visibility:
-            Public
+            [X] Public
             Private
             Unlisted
         Post RTs to Mastodon?

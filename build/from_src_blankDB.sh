@@ -29,9 +29,6 @@ else
     exit 1
 fi
 
-# Change to root
-sudo su -
-
 # Okay, get rid of password based ssh
 cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
 awk '{if(/^#PasswordAuthentication / || /PasswordAuthentication /) print "PasswordAuthentication no" ; else print $0}' /etc/ssh/sshd_config.bak | tee /etc/ssh/sshd_config

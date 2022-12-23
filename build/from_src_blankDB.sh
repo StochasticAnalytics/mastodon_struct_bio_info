@@ -13,8 +13,11 @@
 # Many hosting providers support uploading a public key and automatically set up key-based root login on new machines for you
 
 # A few important defines
-domain_name="cryoem.social"
-admin_email="Benjamin.Himes@cryoem.social"
+domain_name="struct.bio"
+admin_email="Benjamin.Himes@${domain_name}"
+
+set -e
+
 
 echo -e "Important: are you sure you are set up for key based login? the next step will lock you out if you are not. (y/n)"
 read -r answer

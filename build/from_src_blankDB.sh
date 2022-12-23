@@ -176,17 +176,20 @@ yarn set version classic
 
 # We will be using rbenv to manage Ruby versions, because it’s easier to get the right versions and to update once a newer release comes out. 
 # rbenv must be installed for a single Linux user, therefore, first we must create the user Mastodon will be running as:
-
-adduser --disabled-login mastodon
+# In case we are re-running this script
+if [[ -z "$(id mastodon | grep "no such user")" ]] ; then
+    adduser --disabled-login mastodon
+fi
 
 # Next, we want to do a few things as the mastodon user:
-su -i -u mastodon bash << EOF
-git clone https://github.com/rbenv/rbenv.git ~/.rbenv
-cd ~/.rbenv && src/configure && make -C src
-echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
-echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+su -u mastodon bash << EOF
+mastodon_home=~mastodon
+git clone https://github.com/rbenv/rbenv.git ${mastodon_home}/.rbenv
+cd ${mastodon_home}/.rbenv && src/configure && make -C src
+echo 'export PATH="${mastodon_home}/.rbenv/bin:$PATH"' >> ${mastodon_home}/.bashrc
+echo 'eval "$(rbenv init -)"' >> ${mastodon_home}/.bashrc
 exec bash
-git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+git clone https://github.com/rbenv/ruby-build.git ${mastodon_home}/.rbenv/plugins/ruby-build
 RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install 3.0.4
 rbenv global 3.0.4
 gem install bundler --no-document
@@ -201,7 +204,7 @@ CREATE USER mastodon CREATEDB;
 EOF
 
 # Mastodon setup as mastodon user
-su -i -u mastodon bash << EOF
+su -u mastodon bash << EOF
 git clone https://github.com/mastodon/mastodon.git live && cd live
 git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)
 bundle config deployment 'true'

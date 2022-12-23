@@ -177,17 +177,24 @@ yarn set version classic
 # We will be using rbenv to manage Ruby versions, because it’s easier to get the right versions and to update once a newer release comes out. 
 # rbenv must be installed for a single Linux user, therefore, first we must create the user Mastodon will be running as:
 # In case we are re-running this script
-if [[ -z "$(id mastodon | grep "no such user")" ]] ; then
+if [[ ! -d /home/mastodon ]] ; then
     adduser --disabled-login mastodon
 fi
 
 # Next, we want to do a few things as the mastodon user:
+echo "I am $(whoami) and I am about to su - mastodon"
 su - mastodon << "EOF"
+echo "I am $(whoami) and I am about to clone ruby"
+rm -rf ~/.rbenv
 git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 cd ~/.rbenv && src/configure && make -C src
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
-exec bash
+EOF
+
+echo "I am $(whoami) and I am about to su - mastodon again"
+su - mastodon << "EOF"
+echo "I am $(whoami) and I am about to clone ruby-build"
 git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install 3.0.4
 rbenv global 3.0.4

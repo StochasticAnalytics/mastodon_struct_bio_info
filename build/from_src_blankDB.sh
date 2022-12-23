@@ -208,13 +208,13 @@ EOF
 # Now on to some setup work
 
 # Create a DB user for Mastodon with ident authentication so mastodon can connect to the DB
-su -u postgres psql << EOF
+su - postgres psql << EOF
 CREATE USER mastodon CREATEDB;
 \q
 EOF
 
 # Mastodon setup as mastodon user
-su -u mastodon << "EOF"
+su - mastodon << "EOF"
 source ~/.rbenv/.mastodonrc
 git clone https://github.com/mastodon/mastodon.git live && cd live
 git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)

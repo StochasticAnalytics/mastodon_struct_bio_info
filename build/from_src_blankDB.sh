@@ -190,11 +190,15 @@ git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 cd ~/.rbenv && src/configure && make -C src
 echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
 echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+echo '#!/bin/bash' > ~/.rbenv/.mastodonrc
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >>~/.rbenv/.mastodonrc
+echo 'eval "$(rbenv init -)"' >> ~/.rbenv/.mastodonrc
 EOF
 
 echo "I am $(whoami) and I am about to su - mastodon again"
 su - mastodon << "EOF"
 echo "I am $(whoami) and I am about to clone ruby-build"
+source ~/.rbenv/.mastodonrc
 git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install 3.0.4
 rbenv global 3.0.4
@@ -210,7 +214,8 @@ CREATE USER mastodon CREATEDB;
 EOF
 
 # Mastodon setup as mastodon user
-su -u mastodon bash << EOF
+su -u mastodon << "EOF"
+source ~/.rbenv/.mastodonrc
 git clone https://github.com/mastodon/mastodon.git live && cd live
 git checkout $(git tag -l | grep -v 'rc[0-9]*$' | sort -V | tail -n 1)
 bundle config deployment 'true'

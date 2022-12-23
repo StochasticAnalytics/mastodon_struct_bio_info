@@ -182,14 +182,13 @@ if [[ -z "$(id mastodon | grep "no such user")" ]] ; then
 fi
 
 # Next, we want to do a few things as the mastodon user:
-su -u mastodon bash << EOF
-mastodon_home=~mastodon
-git clone https://github.com/rbenv/rbenv.git ${mastodon_home}/.rbenv
-cd ${mastodon_home}/.rbenv && src/configure && make -C src
-echo 'export PATH="${mastodon_home}/.rbenv/bin:$PATH"' >> ${mastodon_home}/.bashrc
-echo 'eval "$(rbenv init -)"' >> ${mastodon_home}/.bashrc
+su - mastodon << "EOF"
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+cd ~/.rbenv && src/configure && make -C src
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+echo 'eval "$(rbenv init -)"' >> ~/.bashrc
 exec bash
-git clone https://github.com/rbenv/ruby-build.git ${mastodon_home}/.rbenv/plugins/ruby-build
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 RUBY_CONFIGURE_OPTS=--with-jemalloc rbenv install 3.0.4
 rbenv global 3.0.4
 gem install bundler --no-document

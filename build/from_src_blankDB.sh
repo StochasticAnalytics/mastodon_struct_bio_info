@@ -3,6 +3,8 @@
 # This script will build a mastodon server with blank database from the source code.
 # This is to be used for migrating an existing database to a new server.
 
+# Note that the iptables setup will still require
+
 # In the future, a containerized approach would be sensible, but for now, this is a good start until I can understand the port forwarding and networking better.
 
 # Prepared from https://docs.joinmastodon.org/admin/prerequisites/
@@ -30,7 +32,7 @@ fi
 
 # Okay, get rid of password based ssh
 sudo cp /etc/ssh/sshd_config /etc/ssh/sshd_config.bak
-awk '{if(/^#PasswordAuthentication / || /PasswordAuthentication /) print "PasswordAuthentication no" ; else print $0}' | sudo tee /etc/ssh/sshd_config
+awk '{if(/^#PasswordAuthentication / || /PasswordAuthentication /) print "PasswordAuthentication no" ; else print $0}' /etc/ssh/sshd_config.bak | sudo tee /etc/ssh/sshd_config
 sudo systemctl restart ssh.service
 
 # Update the system
@@ -153,7 +155,9 @@ sudo ip6tables-restore < /etc/iptables/rules.v6
 sudo apt install -y curl wget gnupg apt-transport-https lsb-release ca-certificates
 
 # Add the nodejs repo
-sudo curl -sL https://deb.nodesource.com/setup_16.x | bash -
+sudo -i -u himesb bash << EOF
+curl -sL https://deb.nodesource.com/setup_16.x 
+EOF
 
 sudo wget -O /usr/share/keyrings/postgresql.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
 echo "deb [signed-by=/usr/share/keyrings/postgresql.asc] http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/postgresql.list

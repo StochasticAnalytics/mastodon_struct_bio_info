@@ -18,9 +18,8 @@ bundle config without 'development test'
 bundle install -j$(getconf _NPROCESSORS_ONLN)
 yarn install --pure-lockfile
 
-# There will be a handful of options to set. The defaults are fine for now.
-RAILS_ENV=production bundle exec rake mastodon:setup
 
-echo "Finished: please return to root and run setup_5_nginx_and_ssl.sh"
+
+echo "Finished: please now run setup_5_init_database.sh"
 
 # 

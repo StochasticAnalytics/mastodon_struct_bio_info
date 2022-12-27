@@ -25,13 +25,17 @@ fi
 # Make the directory if it doesn't exist
 mkdir -p $BACKUP_DIR
 
+# I need to confirm whether or not this is needed. I don't think it should be
 # Stop the server
-systemctl stop mastodon-*.service
+# systemctl stop mastodon-*.service
 
 # Get the nginx config
 cp -pL /etc/nginx/sites-available/default $BACKUP_DIR
 cp -pL /etc/nginx/sites-available/mastodon $BACKUP_DIR
 cp -pL /etc/nginx/nginx.conf $BACKUP_DIR
+
+# Copy of the redis db: TODO this only works as root
+# cp -rpL /var/lib/redis/dump.rdb $BACKUP_DIR
 
 # Get the mastodon config
 cp /etc/systemd/system/mastodon-*.service $BACKUP_DIR
@@ -41,7 +45,7 @@ cp /etc/systemd/system/mastodon-*.service $BACKUP_DIR
 pg_dump -Fc mastodon_production -f ${BACKUP_DIR}/backup.dump
 
 mkdir -p ${BACKUP_DIR}/public/system
-rsync -avz ~/live/public/system/ ${BACKUP_DIR}/public/public/system/
+rsync -avz ~/live/public/system/ ${BACKUP_DIR}/public/system/
 
 
 
